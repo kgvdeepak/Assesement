@@ -14,7 +14,7 @@ dependencies = [
     "Jinja2==3.1.4",
     "python-multipart==0.0.9",
     "pydantic==1.10.13",
-    "fastapi-csrf-protect==0.4.1"
+    "fastapi-csrf-protect==0.3.7"
 ]
 
 [project.optional-dependencies]
