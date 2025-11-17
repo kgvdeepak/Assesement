@@ -1,0 +1,28 @@
+[project]
+name = "exam-workshop"
+version = "0.1.0"
+description = "Workshop scaffold for a FastAPI-based application."
+requires-python = ">=3.10"
+readme = "README.md"
+authors = [{ name = "Your Name" }]
+license = { text = "MIT" }
+dependencies = [
+    "fastapi==0.101.1",
+    "uvicorn==0.23.2",
+    "SQLAlchemy==2.0.23",
+    "alembic==1.12.1",
+    "Jinja2==3.1.4",
+    "python-multipart==0.0.9",
+    "pydantic==1.10.13",
+    "fastapi-csrf-protect==0.4.1"
+]
+
+[project.optional-dependencies]
+Test = [
+    "pytest==7.4.4",
+    "httpx==0.24.1"
+]
+
+[build-system]
+requires = ["setuptools>=67", "wheel"]
+build-backend = "setuptools.build_meta"

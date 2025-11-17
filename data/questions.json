@@ -1,0 +1,62 @@
+[
+  {
+    "text": "What is the capital of France?",
+    "type": "single",
+    "options": [
+      { "text": "Berlin", "is_correct": false },
+      { "text": "Madrid", "is_correct": false },
+      { "text": "Paris", "is_correct": true },
+      { "text": "Rome", "is_correct": false }
+    ]
+  },
+  {
+    "text": "Which HTTP method is used to retrieve data from a server?",
+    "type": "single",
+    "options": [
+      { "text": "POST", "is_correct": false },
+      { "text": "GET", "is_correct": true },
+      { "text": "PUT", "is_correct": false },
+      { "text": "DELETE", "is_correct": false }
+    ]
+  },
+  {
+    "text": "Select the programming languages that are statically typed.",
+    "type": "multi",
+    "options": [
+      { "text": "Python", "is_correct": false },
+      { "text": "Java", "is_correct": true },
+      { "text": "Go", "is_correct": true },
+      { "text": "JavaScript", "is_correct": false }
+    ]
+  },
+  {
+    "text": "Which database engine ships with Python by default?",
+    "type": "single",
+    "options": [
+      { "text": "PostgreSQL", "is_correct": false },
+      { "text": "MySQL", "is_correct": false },
+      { "text": "SQLite", "is_correct": true },
+      { "text": "MongoDB", "is_correct": false }
+    ]
+  },
+  {
+    "text": "Select all HTTP status codes that indicate a successful response.",
+    "type": "multi",
+    "options": [
+      { "text": "200 OK", "is_correct": true },
+      { "text": "201 Created", "is_correct": true },
+      { "text": "301 Moved Permanently", "is_correct": false },
+      { "text": "404 Not Found", "is_correct": false }
+    ]
+  },
+  {
+    "text": "Which of the following commands activates a Python virtual environment on Windows PowerShell?",
+    "type": "single",
+    "options": [
+      { "text": "source .venv/bin/activate", "is_correct": false },
+      { "text": "./.venv/Scripts/activate", "is_correct": false },
+      { "text": ".\\.venv\\Scripts\\Activate.ps1", "is_correct": true },
+      { "text": "conda activate .venv", "is_correct": false }
+    ]
+  }
+]

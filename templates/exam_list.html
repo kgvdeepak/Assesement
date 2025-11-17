@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Exam Questions{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 m-0">Exam Questions</h1>
+    <a class="btn btn-primary" href="/exam/start">Start Exam</a>
+</div>
+
+{% if questions %}
+    <ul class="list-group mb-4">
+        {% for question in questions %}
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h2 class="h5">{{ question.text }}</h2>
+                        <span class="badge bg-secondary text-uppercase">{{ question.type }}</span>
+                    </div>
+                    <span class="badge bg-info">{{ question.options|length }} options</span>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div class="alert alert-info">No questions available yet. Come back later.</div>
+{% endif %}
+
+<nav aria-label="Pagination">
+    <ul class="pagination">
+        <li class="page-item {% if page == 1 %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ page - 1 }}&per_page={{ per_page }}" tabindex="-1">Previous</a>
+        </li>
+        {% for p in range(1, total_pages + 1) %}
+            <li class="page-item {% if p == page %}active{% endif %}">
+                <a class="page-link" href="?page={{ p }}&per_page={{ per_page }}">{{ p }}</a>
+            </li>
+        {% endfor %}
+        <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ page + 1 }}&per_page={{ per_page }}">Next</a>
+        </li>
+    </ul>
+</nav>
+
+<form class="row g-2" method="get" action="">
+    <div class="col-auto">
+        <label class="visually-hidden" for="per_page">Per Page</label>
+        <input type="number" class="form-control" id="per_page" name="per_page" value="{{ per_page }}" min="1" max="50">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-secondary">Update</button>
+    </div>
+</form>
+{% endblock %}

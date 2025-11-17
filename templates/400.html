@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Request Error{% endblock %}
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-5 fw-bold">Bad Request</h1>
+    <p class="lead">{{ message or "We could not process your submission." }}</p>
+    <a class="btn btn-primary" href="/exam">Back to Exam</a>
+</div>
+{% endblock %}

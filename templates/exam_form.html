@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Exam Attempt{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">Complete the Exam</h1>
+
+<form action="/exam/submit" method="post" id="exam-form">
+    <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
+    <!-- Copilot: include CSRF token if fastapi-csrf-protect is configured -->
+    {% if csrf_token %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    {% endif %}
+
+    {% for question in questions %}
+        <section class="card mb-3">
+            <div class="card-body">
+                <h2 class="h5">{{ loop.index }}. {{ question.text }}</h2>
+                <p><span class="badge bg-secondary text-uppercase">{{ question.type }}</span></p>
+
+                {% if question.type == "single" %}
+                    {% for option in question.options %}
+                        <div class="form-check">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="q_{{ question.id }}"
+                                id="q{{ question.id }}_option{{ option.id }}"
+                                value="{{ option.id }}"
+                            >
+                            <label class="form-check-label" for="q{{ question.id }}_option{{ option.id }}">
+                                {{ option.text }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {% for option in question.options %}
+                        <div class="form-check">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="q_{{ question.id }}[]"
+                                id="q{{ question.id }}_option{{ option.id }}"
+                                value="{{ option.id }}"
+                            >
+                            <label class="form-check-label" for="q{{ question.id }}_option{{ option.id }}">
+                                {{ option.text }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </section>
+    {% endfor %}
+
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-success">Submit Exam</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    (function () {
+        const form = document.getElementById('exam-form');
+        if (!form) {
+            return;
+        }
+
+        form.addEventListener('submit', function (event) {
+            const sections = form.querySelectorAll('section.card');
+            const anyAnswered = Array.from(sections).some(section => {
+                const inputs = section.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+                return Array.from(inputs).some(input => input.checked);
+            });
+
+            if (!anyAnswered) {
+                event.preventDefault();
+                alert('Please answer at least one question before submitting.');
+            }
+        });
+    })();
+</script>
+{% endblock %}

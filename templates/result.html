@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Exam Result{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 m-0">Exam Result</h1>
+        <p class="mb-0 text-muted">Attempt #{{ attempt_id }}</p>
+    </div>
+    <div>
+        {% set percentage = (result.score / result.max_score * 100) if result.max_score else 0 %}
+        <span class="badge {% if result.passed %}bg-success{% else %}bg-danger{% endif %} fs-6">
+            {% if result.passed %}Pass{% else %}Fail{% endif %}
+        </span>
+    </div>
+</div>
+
+<section class="card mb-4">
+    <div class="card-body">
+        <div class="row align-items-end g-3">
+            <div class="col-sm-4">
+                <p class="text-uppercase text-muted fw-semibold mb-1">Score</p>
+                <p class="display-6 fw-bold mb-0">{{ result.score|round(2) }} / {{ result.max_score|round(2) }}</p>
+            </div>
+            <div class="col-sm-4">
+                <p class="text-uppercase text-muted fw-semibold mb-1">Percentage</p>
+                <p class="display-6 fw-bold mb-0">{{ percentage|round(2) }}%</p>
+            </div>
+            <div class="col-sm-4 text-sm-end">
+                <div class="btn-group" role="group" aria-label="Result actions">
+                    <a class="btn btn-outline-primary" href="/exam/start">Retake Exam</a>
+                    <a class="btn btn-outline-secondary" href="/exam">Return to Questions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if result.breakdown %}
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0">Question Breakdown</h2>
+        <small class="text-muted">Detailed comparison of your answers</small>
+    </div>
+    <div class="accordion" id="breakdown-accordion">
+        {% for item in result.breakdown %}
+            {% set question_label = item.question_text if item.question_text is defined else "Question " ~ item.question_id %}
+            {% set correct_option_ids = item.correct_option_ids if item.correct_option_ids is defined else [] %}
+            {% set correct_option_texts = item.correct_option_texts if item.correct_option_texts is defined else [] %}
+            {% set selected_option_ids = item.selected_option_ids or [] %}
+            {% set selected_option_texts = item.selected_option_texts if item.selected_option_texts is defined else [] %}
+            {% set question_heading_id = "heading-" ~ loop.index %}
+            {% set question_body_id = "collapse-" ~ loop.index %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="{{ question_heading_id }}">
+                    <button class="accordion-button {% if not loop.first %}collapsed{% endif %} {% if item.correct %}text-success{% else %}text-danger{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#{{ question_body_id }}" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-controls="{{ question_body_id }}">
+                        {{ loop.index }}. {{ question_label }}
+                        <span class="badge ms-3 {% if item.correct %}bg-success{% else %}bg-danger{% endif %}">
+                            {% if item.correct %}Correct{% else %}Incorrect{% endif %}
+                        </span>
+                    </button>
+                </h2>
+                <div id="{{ question_body_id }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" aria-labelledby="{{ question_heading_id }}" data-bs-parent="#breakdown-accordion">
+                    <div class="accordion-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <h3 class="h6">Your Selection</h3>
+                                {% if selected_option_texts %}
+                                    <ul class="mb-0">
+                                        {% for text in selected_option_texts %}
+                                            <li>{{ text }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% elif selected_option_ids %}
+                                    <p class="mb-0">Option IDs: {{ selected_option_ids | join(", ") }}</p>
+                                {% else %}
+                                    <p class="text-muted mb-0">No selection.</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <h3 class="h6">Correct Answer{% if correct_option_texts|length > 1 %}s{% endif %}</h3>
+                                {% if correct_option_texts %}
+                                    <ul class="mb-0">
+                                        {% for text in correct_option_texts %}
+                                            <li>{{ text }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% elif correct_option_ids %}
+                                    <p class="mb-0">Option IDs: {{ correct_option_ids | join(", ") }}</p>
+                                {% else %}
+                                    <p class="text-muted mb-0">Correct answer data unavailable.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if item.score is not none %}
+                        <div class="mt-3">
+                            <span class="badge bg-info text-dark">Score: {{ item.score }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% else %}
+    <div class="alert alert-info">Detailed question breakdown is not available for this attempt.</div>
+{% endif %}
+{% endblock %}
