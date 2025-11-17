@@ -43,13 +43,14 @@ async def list_exam_questions(
     serialized = [QuestionOut.model_validate(question) for question in questions]
 
     context = {
+        "request": request,
         "questions": serialized,
         "page": page,
         "per_page": per_page,
         "total": total_questions,
         "total_pages": max(1, (total_questions + per_page - 1) // per_page),
     }
-    return templates.TemplateResponse(request, "exam_list.html", context)
+    return templates.TemplateResponse("exam_list.html", context)
 
 
 @router.get("/start", response_class=HTMLResponse)
@@ -75,12 +76,12 @@ async def start_exam(
     serialized = [QuestionOut.model_validate(question) for question in questions]
 
     context = {
+        "request": request,
         "attempt_id": str(exam_session.id),
         "questions": serialized,
         "max_score": exam_session.max_score,
     }
     return templates.TemplateResponse(
-        request,
         "exam_form.html",
         context,
         status_code=status.HTTP_201_CREATED,
@@ -143,18 +144,17 @@ async def view_result(
 
     if exam_session is None:
         return templates.TemplateResponse(
-            request,
             "404.html",
-            {"message": "Attempt not found."},
+            {"request": request, "message": "Attempt not found."},
             status_code=status.HTTP_404_NOT_FOUND,
         )
 
     result = build_result(exam_session)
 
     return templates.TemplateResponse(
-        request,
         "result.html",
         {
+            "request": request,
             "attempt_id": attempt_id,
             "result": result,
         },

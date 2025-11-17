@@ -98,18 +98,16 @@ async def submit_exam(
         raw_payload = await parse_submission_payload(request)
     except ValueError as exc:
         return templates.TemplateResponse(
-            request,
             "400.html",
-            {"message": str(exc)},
+            {"request": request, "message": str(exc)},
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
     attempt_id = raw_payload.get("attempt_id")
     if attempt_id is None:
         return templates.TemplateResponse(
-            request,
             "400.html",
-            {"message": "Attempt identifier missing."},
+            {"request": request, "message": "Attempt identifier missing."},
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -117,9 +115,8 @@ async def submit_exam(
         attempt_id_int = int(attempt_id)
     except (TypeError, ValueError):
         return templates.TemplateResponse(
-            request,
             "400.html",
-            {"message": "Invalid attempt identifier."},
+            {"request": request, "message": "Invalid attempt identifier."},
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -131,9 +128,8 @@ async def submit_exam(
     )
     if exam_session is None:
         return templates.TemplateResponse(
-            request,
             "404.html",
-            {"message": "Attempt not found."},
+            {"request": request, "message": "Attempt not found."},
             status_code=status.HTTP_404_NOT_FOUND,
         )
 
